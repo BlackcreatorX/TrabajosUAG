@@ -64,8 +64,13 @@ public class TicTacToe extends JFrame implements ActionListener {
         JButton clickedButton = (JButton) e.getSource();
         if (clickedButton.getText().equals(EMPTY)) {
             clickedButton.setText(currentPlayer);
+            if (currentPlayer.equals(PLAYER_X)) {
+                clickedButton.setBackground(Color.CYAN);
+            } else {
+                clickedButton.setBackground(Color.MAGENTA);
+            }
             if (checkForWin() || checkForDraw()) {
-
+                disableAllButtons();
             } else {
                 currentPlayer = currentPlayer.equals(PLAYER_X) ? PLAYER_O : PLAYER_X;
                 currentPlayerLabel.setText("Current Player: " + currentPlayer);
@@ -74,37 +79,34 @@ public class TicTacToe extends JFrame implements ActionListener {
     }
 
     private boolean checkForWin() {
-        String[][] board = new String[BOARD_SIZE][BOARD_SIZE];
-        for (int i = 0; i < BOARD_SIZE; i++) {
-            for (int j = 0; j < BOARD_SIZE; j++) {
-                board[i][j] = buttons[i][j].getText();
-            }
-        }
-
         // Check rows
         for (int i = 0; i < BOARD_SIZE; i++) {
-            if (board[i][0].equals(board[i][1]) && board[i][0].equals(board[i][2]) && !board[i][0].equals(EMPTY)) {
-                resultLabel.setText("Player " + board[i][0] + " wins!");
+            if (buttons[i][0].getText().equals(buttons[i][1].getText()) &&
+                    buttons[i][0].getText().equals(buttons[i][2].getText()) &&
+                    !buttons[i][0].getText().equals(EMPTY)) {
                 return true;
             }
         }
 
         // Check columns
         for (int i = 0; i < BOARD_SIZE; i++) {
-            if (board[0][i].equals(board[1][i]) && board[0][i].equals(board[2][i]) && !board[0][i].equals(EMPTY)) {
-                resultLabel.setText("Player " + board[0][i] + " wins!");
+            if (buttons[0][i].getText().equals(buttons[1][i].getText()) &&
+                    buttons[0][i].getText().equals(buttons[2][i].getText()) &&
+                    !buttons[0][i].getText().equals(EMPTY)) {
                 return true;
             }
         }
 
         // Check diagonals
-        if (board[0][0].equals(board[1][1]) && board[0][0].equals(board[2][2]) && !board[0][0].equals(EMPTY)) {
-            resultLabel.setText("Player " + board[0][0] + " wins!");
+        if (buttons[0][0].getText().equals(buttons[1][1].getText()) &&
+                buttons[0][0].getText().equals(buttons[2][2].getText()) &&
+                !buttons[0][0].getText().equals(EMPTY)) {
             return true;
         }
 
-        if (board[0][2].equals(board[1][1]) && board[0][2].equals(board[2][0]) && !board[0][2].equals(EMPTY)) {
-            resultLabel.setText("Player " + board[0][2] + " wins!");
+        if (buttons[0][2].getText().equals(buttons[1][1].getText()) &&
+                buttons[0][2].getText().equals(buttons[2][0].getText()) &&
+                !buttons[0][2].getText().equals(EMPTY)) {
             return true;
         }
 
@@ -123,11 +125,20 @@ public class TicTacToe extends JFrame implements ActionListener {
         return true;
     }
 
+    private void disableAllButtons() {
+        for (int i = 0; i < BOARD_SIZE; i++) {
+            for (int j = 0; j < BOARD_SIZE; j++) {
+                buttons[i][j].setEnabled(false);
+            }
+        }
+    }
+
     private void resetGame() {
         for (int i = 0; i < BOARD_SIZE; i++) {
             for (int j = 0; j < BOARD_SIZE; j++) {
                 buttons[i][j].setEnabled(true);
                 buttons[i][j].setText(EMPTY);
+                buttons[i][j].setBackground(null); // Reset button color
             }
         }
         currentPlayer = PLAYER_X;
